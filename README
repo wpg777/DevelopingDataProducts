@@ -1,0 +1,6 @@
+Forecasting country population as a time series.
+Author: Wojciech Gajewski
+
+This application forecasts population of the selected countries using the Holt-Winters filtering model. The population data comes from here (http://data.okfn.org/data/core/population/r/population.csv). More on the Holts-Winters filtering prediction model can be found here: https://stat.ethz.ch/R-manual/R-patched/library/stats/html/HoltWinters.html
+The application allows to choose the alpha parameter of the fitting, the country in question as well as the number of years to predict.
+The bands on the prediction plot represent the 80th and 95th confidence interval.
