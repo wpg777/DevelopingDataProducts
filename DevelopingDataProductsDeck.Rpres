@@ -1,0 +1,55 @@
+Forecasting country population
+========================================================
+author: Wojciech Gajewski
+date: 23rd of August, 2015.
+
+Model Description
+========================================================
+
+ * Goal is to forecast population size for some countries.
+   - Not a demographics excercise,
+   - Treating the data as simple time series.
+   - Data taken from one of the publicly available CSV files.
+ * Using Holt-Winters as a prediction model,
+ * Simple control over the model offered to the user:
+   - Country choice,
+   - Alpha parameter,
+   - Length of prediction.
+     
+
+Holt-Winters prediction function
+========================================================
+- Exponential-smoothing family of forecasting methods.
+
+The additive Holt-Winters prediction function (for time series with period length p) is:
+$\hat{y}[t+h] =a[t] + h * b[t] + s[t - p + 1 + (h - 1) mod\ p],$
+where:
+$a[t] = α (Y[t] - s[t-p]) + (1-α) (a[t-1] + b[t-1]),$
+(and $\alpha$ is controllable in the application),
+$b[t] = β (a[t] - a[t-1]) + (1-β) b[t-1]$,
+$s[t] = γ (Y[t] - a[t]) + (1-γ) s[t-p]$.
+
+In the application, the seasonal term is not used.
+
+
+Forecast Example
+========================================================
+
+```{r, echo=FALSE, cache=TRUE}
+library(forecast)
+population <- read.csv("population.csv")
+country_population <-subset(population, Country.Name == 'Mali')
+# Creating time series.
+country_population_ts <- ts(country_population$Value, start=country_population$Year[1])
+model <- HoltWinters(country_population_ts, gamma=FALSE, alpha=0.5, beta=TRUE)
+plot.forecast(forecast.HoltWinters(model, h=50), main=paste('Population Prediction Plot for', 'Mali'))
+```
+
+Final thoughts
+========================================================
+* Just a toy forecast...
+  - We do not take additional demographic information into account
+* Wanted to present examples of countries at a various demographic stage:
+  - Young, high fertility ones (e.g. Mali),
+  - Stagnating fertility rate (e.g. Poland, United States),
+  - Older societies with fertility rates below replacement level (e.g. Bulgaria, Latvia).
